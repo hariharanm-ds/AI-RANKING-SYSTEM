@@ -1,0 +1,10 @@
+backend/venv/
+backend/__pycache__/
+api/__pycache__/
+uploads/
+output/
+.env
+backend/.env
+.git/
+.agents/
+.codex/

@@ -1,0 +1,8 @@
+fastapi
+groq
+pdfplumber
+PyPDF2
+pandas
+numpy
+python-multipart
+python-dotenv

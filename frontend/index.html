@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeuroRank AI — Intelligent Candidate Ranking</title>
+  <meta name="description" content="Next-generation AI-powered candidate ranking using FAISS semantic embeddings and Groq Llama 3.3 70B evaluation to find your perfect hire with neural precision." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css?v=20260702-focus" />
+</head>
+<body>
+
+  <!-- Particle Canvas Background -->
+  <canvas id="particleCanvas" class="particle-canvas"></canvas>
+
+  <!-- Animated Background Orbs -->
+  <div class="bg-scene">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+    <div class="grid-overlay"></div>
+    <div class="scanline"></div>
+  </div>
+
+  <!-- Top Navigation -->
+  <nav class="topnav" id="topnav">
+    <div class="nav-brand">
+      <div class="brand-logo">
+        <svg viewBox="0 0 36 36" fill="none">
+          <circle cx="18" cy="18" r="16" fill="url(#logoGrad)" opacity="0.2"/>
+          <circle cx="18" cy="18" r="10" fill="url(#logoGrad)" opacity="0.5"/>
+          <circle cx="18" cy="18" r="4" fill="white"/>
+          <circle cx="10" cy="12" r="2.5" fill="url(#logoGrad)" opacity="0.8"/>
+          <circle cx="26" cy="12" r="2.5" fill="url(#logoGrad)" opacity="0.8"/>
+          <circle cx="10" cy="24" r="2.5" fill="url(#logoGrad)" opacity="0.6"/>
+          <circle cx="26" cy="24" r="2.5" fill="url(#logoGrad)" opacity="0.6"/>
+          <line x1="10" y1="12" x2="18" y2="18" stroke="url(#logoGrad)" stroke-width="1" opacity="0.6"/>
+          <line x1="26" y1="12" x2="18" y2="18" stroke="url(#logoGrad)" stroke-width="1" opacity="0.6"/>
+          <line x1="10" y1="24" x2="18" y2="18" stroke="url(#logoGrad)" stroke-width="1" opacity="0.6"/>
+          <line x1="26" y1="24" x2="18" y2="18" stroke="url(#logoGrad)" stroke-width="1" opacity="0.6"/>
+          <defs>
+            <linearGradient id="logoGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#818cf8"/>
+              <stop offset="100%" stop-color="#a78bfa"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">NeuroRank <span class="brand-ai">AI</span></span>
+        <span class="brand-ver">v2.0</span>
+      </div>
+    </div>
+
+    <div class="nav-center">
+      <div class="nav-pills">
+        <div class="nav-pill active" id="pillarJob">
+          <span class="pill-num">01</span>
+          <span>Job Description</span>
+        </div>
+        <div class="nav-arrow">›</div>
+        <div class="nav-pill" id="pillarResumes">
+          <span class="pill-num">02</span>
+          <span>Resumes</span>
+        </div>
+        <div class="nav-arrow">›</div>
+        <div class="nav-pill" id="pillarRank">
+          <span class="pill-num">03</span>
+          <span>AI Ranking</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <div class="system-indicator" id="systemIndicator">
+        <div class="sys-dot"></div>
+        <span id="systemStatusText">System Ready</span>
+      </div>
+      <div class="nav-tech-badges">
+        <span class="tech-badge groq-badge">
+          <svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" fill="#10b981" opacity="0.3"/><circle cx="6" cy="6" r="3" fill="#10b981" opacity="0.7"/><circle cx="6" cy="6" r="1.5" fill="#10b981"/></svg>
+          Groq Llama 3.3
+        </span>
+        <span class="tech-badge">FAISS</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="eyebrow-dot"></span>
+        AI-Powered Hiring Intelligence
+      </div>
+      <h1 class="hero-title">
+        Rank Candidates with
+        <span class="title-gradient">Neural Precision</span>
+      </h1>
+      <p class="hero-desc">
+        Combine <strong>semantic embeddings</strong>, <strong>FAISS vector search</strong>, 
+        and <strong>Groq AI evaluation</strong> to rank candidates with unprecedented accuracy — 
+        beyond simple keyword matching.
+      </p>
+      <div class="hero-metrics">
+        <div class="metric-card">
+          <div class="metric-ring">
+            <svg viewBox="0 0 56 56">
+              <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(99,102,241,0.15)" stroke-width="4"/>
+              <circle cx="28" cy="28" r="22" fill="none" stroke="url(#mr1)" stroke-width="4" 
+                      stroke-dasharray="138.2" stroke-dashoffset="41.5" stroke-linecap="round" transform="rotate(-90 28 28)"/>
+              <defs><linearGradient id="mr1" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs>
+            </svg>
+            <span class="metric-val">70%</span>
+          </div>
+          <div class="metric-label">Semantic Weight</div>
+          <div class="metric-sub">FAISS + MiniLM</div>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-card">
+          <div class="metric-ring">
+            <svg viewBox="0 0 56 56">
+              <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(167,139,250,0.15)" stroke-width="4"/>
+              <circle cx="28" cy="28" r="22" fill="none" stroke="url(#mr2)" stroke-width="4" 
+                      stroke-dasharray="138.2" stroke-dashoffset="96.7" stroke-linecap="round" transform="rotate(-90 28 28)"/>
+              <defs><linearGradient id="mr2" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
+            </svg>
+            <span class="metric-val">30%</span>
+          </div>
+          <div class="metric-label">AI Evaluation</div>
+          <div class="metric-sub">Groq Llama 3.3</div>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-card">
+          <div class="metric-ring">
+            <svg viewBox="0 0 56 56">
+              <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(16,185,129,0.15)" stroke-width="4"/>
+              <circle cx="28" cy="28" r="22" fill="none" stroke="url(#mr3)" stroke-width="4" 
+                      stroke-dasharray="138.2" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 28 28)"/>
+              <defs><linearGradient id="mr3" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop stop-color="#10b981"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs>
+            </svg>
+            <span class="metric-val">∞</span>
+          </div>
+          <div class="metric-label">Candidates</div>
+          <div class="metric-sub">Unlimited scale</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="neural-viz">
+        <canvas id="neuralCanvas" width="340" height="340"></canvas>
+        <div class="viz-overlay">
+          <div class="viz-glyph">🧠</div>
+          <div class="viz-label">Neural Network</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Workflow Steps -->
+  <main class="workflow" id="workflow">
+
+    <!-- Step 1 — Job Description -->
+    <div class="step-wrap" id="step1">
+      <div class="step-track">
+        <div class="track-num active" id="trackNum1">
+          <span>01</span>
+          <div class="track-pulse"></div>
+        </div>
+        <div class="track-line" id="trackLine1"></div>
+      </div>
+      <div class="step-panel" id="step1Panel">
+        <div class="panel-header">
+          <div class="panel-icon indigo-icon">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M7 8h10M7 12h10M7 16h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="panel-title-group">
+            <h2 class="panel-title">Job Description</h2>
+            <p class="panel-subtitle">Define the role requirements for AI analysis</p>
+          </div>
+          <div class="panel-status-badge" id="jobBadge">
+            <span class="badge-dot"></span>Pending
+          </div>
+        </div>
+
+        <div class="panel-body">
+          <div class="field-group">
+            <label class="field-label" for="jobText">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M2 3h12M2 6h12M2 9h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Paste Job Description
+            </label>
+            <div class="textarea-wrap">
+              <textarea id="jobText" class="textarea-field" rows="8" 
+                placeholder="Paste the full job description here — include required skills, experience level, responsibilities, and qualifications..."></textarea>
+              <div class="textarea-footer">
+                <span class="char-count" id="charCount">0 characters</span>
+                <span class="char-hint">More detail = better AI analysis</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="or-divider"><span>or upload PDF</span></div>
+
+          <div class="dropzone" id="jobDropzone">
+            <input type="file" id="jobFile" accept=".pdf" class="file-input" />
+            <div class="drop-inner">
+              <div class="drop-icon">
+                <svg viewBox="0 0 52 52" fill="none">
+                  <rect x="2" y="2" width="48" height="48" rx="10" fill="url(#di1)" opacity="0.15"/>
+                  <path d="M26 34V18M19 25l7-7 7 7" stroke="url(#di1)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M16 38h20" stroke="url(#di1)" stroke-width="2.5" stroke-linecap="round"/>
+                  <defs><linearGradient id="di1" x1="2" y1="2" x2="50" y2="50"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs>
+                </svg>
+              </div>
+              <p class="drop-title">Drop <strong>Job Description PDF</strong> here</p>
+              <p class="drop-hint">or <button class="text-link" onclick="document.getElementById('jobFile').click()">browse files</button></p>
+              <div class="drop-file-badge" id="jobFileBadge"></div>
+            </div>
+          </div>
+
+          <button id="uploadJobBtn" class="action-btn primary-btn" onclick="uploadJob()">
+            <span class="btn-icon">
+              <svg viewBox="0 0 20 20" fill="none"><path d="M10 2v11M5 7l5-5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 15v1a2 2 0 002 2h10a2 2 0 002-2v-1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+            <span class="btn-label">Upload Job Description</span>
+            <span class="btn-shine"></span>
+          </button>
+
+          <div id="jobStatus" class="status-banner"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 — Upload Resumes -->
+    <div class="step-wrap" id="step2">
+      <div class="step-track">
+        <div class="track-num" id="trackNum2"><span>02</span></div>
+        <div class="track-line" id="trackLine2"></div>
+      </div>
+      <div class="step-panel" id="step2Panel">
+        <div class="panel-header">
+          <div class="panel-icon cyan-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M9 12h6M9 15h4M5 21h14a2 2 0 002-2V7l-5-5H5a2 2 0 00-2 2v16a2 2 0 002 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 2v5h5" stroke="currentColor" stroke-width="1.5"/></svg>
+          </div>
+          <div class="panel-title-group">
+            <h2 class="panel-title">Upload Resumes</h2>
+            <p class="panel-subtitle">Add multiple candidate PDFs for AI evaluation</p>
+          </div>
+          <div class="panel-status-badge" id="resumeBadge">
+            <span class="badge-dot"></span>Pending
+          </div>
+        </div>
+
+        <div class="panel-body">
+          <div class="dropzone multi-drop" id="resumeDropzone">
+            <input type="file" id="resumeFiles" accept=".pdf" multiple class="file-input" />
+            <div class="drop-inner">
+              <div class="drop-icon">
+                <svg viewBox="0 0 52 52" fill="none">
+                  <rect x="2" y="2" width="48" height="48" rx="10" fill="url(#di2)" opacity="0.15"/>
+                  <path d="M22 30V18M16 24l6-6 6 6" stroke="url(#di2)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M30 34V22M24 28l6-6 6 6" stroke="url(#di2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+                  <path d="M12 38h28" stroke="url(#di2)" stroke-width="2.5" stroke-linecap="round"/>
+                  <defs><linearGradient id="di2" x1="2" y1="2" x2="50" y2="50"><stop stop-color="#06b6d4"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs>
+                </svg>
+              </div>
+              <p class="drop-title">Drop <strong>Multiple Resume PDFs</strong> here</p>
+              <p class="drop-hint">or <button class="text-link" onclick="document.getElementById('resumeFiles').click()">browse files</button> — select as many as needed</p>
+            </div>
+          </div>
+
+          <!-- File Queue -->
+          <div class="resume-queue" id="resumeQueue"></div>
+
+          <button id="uploadResumesBtn" class="action-btn secondary-btn" onclick="uploadResumes()">
+            <span class="btn-icon">
+              <svg viewBox="0 0 20 20" fill="none"><path d="M3 7l7-5 7 5v10a1 1 0 01-1 1H4a1 1 0 01-1-1V7z" stroke="currentColor" stroke-width="1.5"/><path d="M8 18V12h4v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </span>
+            <span class="btn-label">Parse All Resumes with AI</span>
+            <span class="btn-shine"></span>
+          </button>
+
+          <div id="resumeStatus" class="status-banner"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 — Rank -->
+    <div class="step-wrap last-step" id="step3">
+      <div class="step-track">
+        <div class="track-num" id="trackNum3"><span>03</span></div>
+      </div>
+      <div class="step-panel rank-panel" id="step3Panel">
+        <div class="panel-header">
+          <div class="panel-icon amber-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="panel-title-group">
+            <h2 class="panel-title">AI Ranking Engine</h2>
+            <p class="panel-subtitle">Semantic search + Groq LLM evaluation pipeline</p>
+          </div>
+        </div>
+
+        <div class="panel-body">
+          <!-- Score Formula Visual -->
+          <div class="formula-bar">
+            <div class="formula-block fb-semantic">
+              <div class="fb-percent">70%</div>
+              <div class="fb-name">Semantic Similarity</div>
+              <div class="fb-tech">FAISS + all-MiniLM-L6-v2</div>
+            </div>
+            <div class="formula-op">+</div>
+            <div class="formula-block fb-groq">
+              <div class="fb-percent">30%</div>
+              <div class="fb-name">AI Match Score</div>
+              <div class="fb-tech">Groq Llama 3.3 70B</div>
+            </div>
+            <div class="formula-op">=</div>
+            <div class="formula-block fb-final">
+              <div class="fb-percent">Score</div>
+              <div class="fb-name">Final Ranking</div>
+              <div class="fb-tech">0 – 100 composite</div>
+            </div>
+          </div>
+
+          <button id="rankBtn" class="action-btn rank-btn" onclick="rankCandidates()">
+            <span class="btn-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M9.663 17h4.673M12 3v1M18.364 5.636l-.707.707M21 12h-1M18.364 18.364l-.707-.707M12 21v-1M5.636 18.364l.707-.707M3 12h1M5.636 5.636l.707.707" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+            <span class="btn-label" id="rankBtnText">Analyze &amp; Rank Candidates</span>
+            <span class="btn-shine"></span>
+          </button>
+
+          <!-- Progress -->
+          <div class="rank-progress hidden" id="rankProgress">
+            <div class="progress-pipeline">
+              <div class="pipe-step active" id="pipe1">
+                <div class="pipe-dot"><div class="pipe-inner"></div></div>
+                <span class="pipe-label">Embeddings</span>
+              </div>
+              <div class="pipe-connector" id="pconn1"></div>
+              <div class="pipe-step" id="pipe2">
+                <div class="pipe-dot"><div class="pipe-inner"></div></div>
+                <span class="pipe-label">Vector Search</span>
+              </div>
+              <div class="pipe-connector" id="pconn2"></div>
+              <div class="pipe-step" id="pipe3">
+                <div class="pipe-dot"><div class="pipe-inner"></div></div>
+                <span class="pipe-label">Groq Eval</span>
+              </div>
+              <div class="pipe-connector" id="pconn3"></div>
+              <div class="pipe-step" id="pipe4">
+                <div class="pipe-dot"><div class="pipe-inner"></div></div>
+                <span class="pipe-label">Final Rank</span>
+              </div>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="progressBar"></div>
+              <div class="progress-glow"></div>
+            </div>
+            <p class="progress-message" id="progressMsg">Initializing neural embedding engine...</p>
+          </div>
+
+          <div id="rankStatus" class="status-banner"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Results Section -->
+  <section class="results-section" id="resultsSection">
+
+    <!-- Results Header -->
+    <div class="results-header">
+      <div class="results-title-group">
+        <div class="results-icon">🏆</div>
+        <div>
+          <h2 class="results-title">Ranking Results</h2>
+          <p class="results-sub" id="resultsSubtitle">Awaiting analysis...</p>
+        </div>
+      </div>
+      <div class="results-controls">
+        <div class="view-toggle">
+          <button class="toggle-btn active" id="toggleCards" onclick="setView('cards')">
+            <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            Cards
+          </button>
+          <button class="toggle-btn" id="toggleTable" onclick="setView('table')">
+            <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="3" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="1" y="6" width="14" height="3" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="1" y="11" width="14" height="3" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            Table
+          </button>
+        </div>
+        <button class="outline-btn" id="downloadCsvBtn" disabled onclick="downloadCsv()">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M3 13l4 4 4-4M7 17V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 3h4a1 1 0 011 1v12a1 1 0 01-1 1h-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Export CSV
+        </button>
+        <button class="outline-btn danger-btn" id="resetBtn" onclick="resetSession()">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Reset
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-art">
+        <div class="empty-rings">
+          <div class="e-ring r1"></div>
+          <div class="e-ring r2"></div>
+          <div class="e-ring r3"></div>
+        </div>
+        <div class="empty-icon-wrap">
+          <svg viewBox="0 0 60 60" fill="none">
+            <path d="M30 12C20 12 13 19 13 28c0 5 2 9 5.5 12V46a1.5 1.5 0 001.5 1.5h1.5V52h8v-4.5H31A1.5 1.5 0 0032.5 46v-6c3.5-3 5.5-7 5.5-12C38 19 40 12 30 12z" fill="url(#brainG)" opacity="0.8"/>
+            <defs><linearGradient id="brainG" x1="13" y1="12" x2="47" y2="52" gradientUnits="userSpaceOnUse"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs>
+          </svg>
+        </div>
+      </div>
+      <h3 class="empty-title">Ready to Analyze</h3>
+      <p class="empty-desc">Upload a job description and resumes, then click <strong>Analyze &amp; Rank Candidates</strong> to see AI-powered results.</p>
+      <div class="empty-steps">
+        <div class="e-step">① Job Description</div>
+        <div class="e-arrow">→</div>
+        <div class="e-step">② Upload Resumes</div>
+        <div class="e-arrow">→</div>
+        <div class="e-step">③ AI Ranking</div>
+      </div>
+    </div>
+
+    <!-- Cards View -->
+    <div class="cards-view hidden" id="cardsView">
+      <!-- Podium Top 3 -->
+      <div class="podium-section" id="podiumSection">
+        <div class="podium-label">
+          <span>Top Performers</span>
+          <div class="podium-divider"></div>
+        </div>
+        <div class="podium" id="podium"></div>
+      </div>
+      <!-- All Candidates Grid -->
+      <div class="candidates-label">
+        <span>All Candidates</span>
+        <div class="podium-divider"></div>
+      </div>
+      <div class="candidates-grid" id="candidatesGrid"></div>
+    </div>
+
+    <!-- Table View -->
+    <div class="table-view hidden" id="tableView">
+      <div class="table-wrap">
+        <table class="data-table" id="resultsTable">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Candidate</th>
+              <th>Similarity</th>
+              <th>AI Match</th>
+              <th>Final Score</th>
+              <th>Top Skills</th>
+              <th>Missing Skills</th>
+              <th>AI Recommendation</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Candidate Detail Modal -->
+  <div class="modal-backdrop hidden" id="modalBackdrop" onclick="closeModal()">
+    <div class="modal-box" onclick="event.stopPropagation()" id="candidateModal">
+      <button class="modal-close-btn" onclick="closeModal()">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-stack" id="toastContainer"></div>
+
+  <script src="/static/script.js?v=20260702-focus"></script>
+</body>
+</html>
