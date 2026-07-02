@@ -230,7 +230,7 @@ async function uploadResumes() {
   files.forEach(f => formData.append("resume_files", f));
 
   uploadResumesBtn.disabled = true;
-  uploadResumesBtn.innerHTML = `<span class="btn-icon"><svg class="spin" viewBox="0 0 24 24" fill="none"><path d="M12 4V2M12 22v-2M4 12H2M22 12h-2M17.657 6.343l1.414-1.414M4.93 19.07l1.414-1.414M17.657 17.657l1.414 1.414M4.93 4.93l1.414 1.414" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="btn-label">Parsing Resumes with AI...</span>`;
+  uploadResumesBtn.innerHTML = `<span class="btn-icon"><svg class="spin" viewBox="0 0 24 24" fill="none"><path d="M12 4V2M12 22v-2M4 12H2M22 12h-2M17.657 6.343l1.414-1.414M4.93 19.07l1.414-1.414M17.657 17.657l1.414 1.414M4.93 4.93l1.414 1.414" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="btn-label">Parsing PDFs & JSON...</span>`;
   setStatus(resumeStatus, `Parsing ${files.length} resume file(s)...`, "info");
 
   try {
@@ -254,7 +254,7 @@ async function uploadResumes() {
     showToast(err.message, "error");
   } finally {
     uploadResumesBtn.disabled = false;
-    uploadResumesBtn.innerHTML = `<span class="btn-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M3 7l7-5 7 5v10a1 1 0 01-1 1H4a1 1 0 01-1-1V7z" stroke="currentColor" stroke-width="1.5"/><path d="M8 18V12h4v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Parse All Resumes with AI</span><span class="btn-shine"></span>`;
+    uploadResumesBtn.innerHTML = `<span class="btn-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M3 7l7-5 7 5v10a1 1 0 01-1 1H4a1 1 0 01-1-1V7z" stroke="currentColor" stroke-width="1.5"/><path d="M8 18V12h4v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Parse PDFs & JSON with AI</span><span class="btn-shine"></span>`;
   }
 }
 

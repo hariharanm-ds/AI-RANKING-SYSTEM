@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/static/style.css?v=20260702-focus" />
+  <link rel="stylesheet" href="/static/style.css?v=20260702-json" />
 </head>
 <body>
 
@@ -248,7 +248,7 @@
           </div>
           <div class="panel-title-group">
             <h2 class="panel-title">Upload Resumes</h2>
-            <p class="panel-subtitle">Add candidate PDFs or JSON profiles for AI evaluation</p>
+            <p class="panel-subtitle">Add candidate PDF resumes or JSON profile files for AI evaluation</p>
           </div>
           <div class="panel-status-badge" id="resumeBadge">
             <span class="badge-dot"></span>Pending
@@ -268,7 +268,7 @@
                   <defs><linearGradient id="di2" x1="2" y1="2" x2="50" y2="50"><stop stop-color="#06b6d4"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs>
                 </svg>
               </div>
-              <p class="drop-title">Drop <strong>Resume PDFs or JSON files</strong> here</p>
+              <p class="drop-title">Drop <strong>PDF resumes or JSON profiles</strong> here</p>
               <p class="drop-hint">or <button class="text-link" onclick="document.getElementById('resumeFiles').click()">browse files</button> — select as many as needed</p>
             </div>
           </div>
@@ -280,7 +280,7 @@
             <span class="btn-icon">
               <svg viewBox="0 0 20 20" fill="none"><path d="M3 7l7-5 7 5v10a1 1 0 01-1 1H4a1 1 0 01-1-1V7z" stroke="currentColor" stroke-width="1.5"/><path d="M8 18V12h4v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
             </span>
-            <span class="btn-label">Parse All Resumes with AI</span>
+            <span class="btn-label">Parse PDFs &amp; JSON with AI</span>
             <span class="btn-shine"></span>
           </button>
 
@@ -485,6 +485,6 @@
   <!-- Toast Container -->
   <div class="toast-stack" id="toastContainer"></div>
 
-  <script src="/static/script.js?v=20260702-focus"></script>
+  <script src="/static/script.js?v=20260702-json"></script>
 </body>
 </html>

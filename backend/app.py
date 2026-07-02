@@ -342,4 +342,7 @@ if FRONTEND_DIR.exists():
 
     @app.get("/")
     async def serve_frontend() -> FileResponse:
-        return FileResponse(FRONTEND_DIR / "index.html")
+        return FileResponse(
+            FRONTEND_DIR / "index.html",
+            headers={"Cache-Control": "no-store, max-age=0"},
+        )
