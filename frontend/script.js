@@ -36,6 +36,8 @@ const toastContainer = document.getElementById("toastContainer");
 
 let currentResults  = [];
 let progressTimer   = null;
+let pendingResumeFiles = [];
+let uploadedResumeCandidates = [];
 
 // ─── Toast Notifications ─────────────────────────────
 function showToast(message, type = "info", duration = 4000) {
@@ -166,14 +168,44 @@ setupDropzone("jobDropzone", "jobFile", (files) => {
 });
 
 setupDropzone("resumeDropzone", "resumeFiles", (files) => {
-  const arr = Array.from(files);
-  resumeQueue.innerHTML = arr.map(f =>
+  addPendingResumeFiles(files);
+});
+
+function resumeFileKey(file) {
+  return `${file.name}|${file.size}|${file.lastModified}`;
+}
+
+function addPendingResumeFiles(files) {
+  const existing = new Set(pendingResumeFiles.map(resumeFileKey));
+  Array.from(files).forEach(file => {
+    const key = resumeFileKey(file);
+    if (!existing.has(key)) {
+      pendingResumeFiles.push(file);
+      existing.add(key);
+    }
+  });
+
+  resumeFiles.value = "";
+  renderResumeQueue();
+}
+
+function renderResumeQueue() {
+  const uploadedHtml = uploadedResumeCandidates.map(c =>
+    `<div class="resume-chip parsed">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M16 5L7.5 14 4 10.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      ${escapeHtml(c.name)} <span style="opacity:0.6;font-size:0.65rem">Â· ${escapeHtml(c.filename)}</span>
+    </div>`
+  ).join("");
+
+  const pendingHtml = pendingResumeFiles.map(f =>
     `<div class="resume-chip">
       <svg viewBox="0 0 24 24" fill="none"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke="currentColor" stroke-width="1.5"/></svg>
       ${escapeHtml(f.name)}
     </div>`
   ).join("");
-});
+
+  resumeQueue.innerHTML = uploadedHtml + pendingHtml;
+}
 
 // ─── Upload Job ────────────────────────────────────────
 async function uploadJob() {
@@ -211,7 +243,7 @@ async function uploadJob() {
 
 // ─── Upload Resumes ────────────────────────────────────
 async function uploadResumes() {
-  const files = Array.from(resumeFiles.files || []);
+  const files = pendingResumeFiles.slice();
   if (!files.length) {
     showToast("Please select at least one resume PDF or JSON file.", "error");
     setStatus(resumeStatus, "Select at least one PDF or JSON file.", "error");
@@ -248,7 +280,11 @@ async function uploadResumes() {
         </div>`
       ).join("");
     }
-    showToast(`${data.count} resume(s) parsed successfully!`, "success");
+    pendingResumeFiles = [];
+    resumeFiles.value = "";
+    uploadedResumeCandidates = data.candidates || [];
+    renderResumeQueue();
+    showToast(`${data.uploaded_count || files.length} new resume(s) parsed. ${data.total_count || data.count} total candidate(s) ready.`, "success");
   } catch (err) {
     setStatus(resumeStatus, err.message, "error");
     showToast(err.message, "error");

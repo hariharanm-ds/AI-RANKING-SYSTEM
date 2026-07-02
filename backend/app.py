@@ -203,15 +203,21 @@ async def upload_resumes(resume_files: list[UploadFile] = File(...)) -> dict[str
             detail=f"No resumes could be processed. Errors: {'; '.join(parse_errors)}",
         )
 
-    state["resumes"] = resumes
+    all_resumes = [*state["resumes"], *resumes]
+    state["resumes"] = all_resumes
     state["results"] = []
     state["embedding_index"] = None
     state["rank_status"] = "idle"
 
     return {
-        "message": f"{len(resumes)} resume(s) uploaded and parsed successfully.",
-        "count": len(resumes),
-        "candidates": [{"filename": r["filename"], "name": r["name"]} for r in resumes],
+        "message": (
+            f"{len(resumes)} new resume(s) uploaded and parsed successfully. "
+            f"{len(all_resumes)} total candidate(s) ready."
+        ),
+        "count": len(all_resumes),
+        "uploaded_count": len(resumes),
+        "total_count": len(all_resumes),
+        "candidates": [{"filename": r["filename"], "name": r["name"]} for r in all_resumes],
         "parse_errors": parse_errors,
     }
 
