@@ -213,8 +213,16 @@ async function uploadJob() {
 async function uploadResumes() {
   const files = Array.from(resumeFiles.files || []);
   if (!files.length) {
-    showToast("Please select at least one resume PDF.", "error");
-    setStatus(resumeStatus, "Select at least one PDF file.", "error");
+    showToast("Please select at least one resume PDF or JSON file.", "error");
+    setStatus(resumeStatus, "Select at least one PDF or JSON file.", "error");
+    return;
+  }
+
+  const invalidFiles = files.filter(f => !/\.(pdf|json)$/i.test(f.name));
+  if (invalidFiles.length) {
+    const names = invalidFiles.map(f => f.name).join(", ");
+    showToast("Only PDF and JSON resume files are supported.", "error");
+    setStatus(resumeStatus, `Unsupported file type: ${names}`, "error");
     return;
   }
 
@@ -223,7 +231,7 @@ async function uploadResumes() {
 
   uploadResumesBtn.disabled = true;
   uploadResumesBtn.innerHTML = `<span class="btn-icon"><svg class="spin" viewBox="0 0 24 24" fill="none"><path d="M12 4V2M12 22v-2M4 12H2M22 12h-2M17.657 6.343l1.414-1.414M4.93 19.07l1.414-1.414M17.657 17.657l1.414 1.414M4.93 4.93l1.414 1.414" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="btn-label">Parsing Resumes with AI...</span>`;
-  setStatus(resumeStatus, `Parsing ${files.length} resume(s) with Groq AI...`, "info");
+  setStatus(resumeStatus, `Parsing ${files.length} resume file(s)...`, "info");
 
   try {
     const res = await fetch(`${API_BASE}/upload-resumes`, { method: "POST", body: formData });

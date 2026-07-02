@@ -248,7 +248,7 @@
           </div>
           <div class="panel-title-group">
             <h2 class="panel-title">Upload Resumes</h2>
-            <p class="panel-subtitle">Add multiple candidate PDFs for AI evaluation</p>
+            <p class="panel-subtitle">Add candidate PDFs or JSON profiles for AI evaluation</p>
           </div>
           <div class="panel-status-badge" id="resumeBadge">
             <span class="badge-dot"></span>Pending
@@ -257,7 +257,7 @@
 
         <div class="panel-body">
           <div class="dropzone multi-drop" id="resumeDropzone">
-            <input type="file" id="resumeFiles" accept=".pdf" multiple class="file-input" />
+            <input type="file" id="resumeFiles" accept=".pdf,.json,application/pdf,application/json" multiple class="file-input" />
             <div class="drop-inner">
               <div class="drop-icon">
                 <svg viewBox="0 0 52 52" fill="none">
@@ -268,7 +268,7 @@
                   <defs><linearGradient id="di2" x1="2" y1="2" x2="50" y2="50"><stop stop-color="#06b6d4"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs>
                 </svg>
               </div>
-              <p class="drop-title">Drop <strong>Multiple Resume PDFs</strong> here</p>
+              <p class="drop-title">Drop <strong>Resume PDFs or JSON files</strong> here</p>
               <p class="drop-hint">or <button class="text-link" onclick="document.getElementById('resumeFiles').click()">browse files</button> — select as many as needed</p>
             </div>
           </div>

@@ -18,6 +18,8 @@ from parser import (
     clean_text,
     default_parsed_resume,
     extract_text_from_pdf,
+    load_resume_json_records,
+    parsed_resume_from_json,
 )
 from ranking import rank_candidates
 
@@ -133,21 +135,45 @@ async def upload_job(
 # ─── Upload Resumes ───────────────────────────────────────────────────────────
 @app.post("/upload-resumes")
 async def upload_resumes(resume_files: list[UploadFile] = File(...)) -> dict[str, Any]:
-    """Upload multiple resume PDFs, parse each with Groq AI."""
+    """Upload multiple resume PDFs or JSON files, then parse candidates."""
     if not resume_files:
-        raise HTTPException(status_code=400, detail="At least one resume PDF is required.")
+        raise HTTPException(status_code=400, detail="At least one resume PDF or JSON file is required.")
 
     resumes: list[dict[str, Any]] = []
     parse_errors: list[str] = []
 
     for upload in resume_files:
-        if not upload.filename or not upload.filename.lower().endswith(".pdf"):
+        filename = upload.filename or "unknown"
+        suffix = Path(filename).suffix.lower()
+        if suffix not in {".pdf", ".json"}:
             raise HTTPException(
                 status_code=400,
-                detail=f"Invalid file: {upload.filename or 'unknown'}. Only PDFs allowed.",
+                detail=f"Invalid file: {filename}. Only PDF and JSON files are allowed.",
             )
 
         path = _save_upload(upload, "resume")
+        if suffix == ".json":
+            try:
+                records = load_resume_json_records(path)
+            except ValueError as e:
+                parse_errors.append(str(e))
+                continue
+
+            for index, record in enumerate(records, start=1):
+                parsed = parsed_resume_from_json(record, filename)
+                document_text = build_resume_document(parsed)
+                candidate_filename = filename if len(records) == 1 else f"{filename}#{index}"
+                resumes.append(
+                    {
+                        "filename": candidate_filename,
+                        "saved_path": str(path),
+                        "parsed": parsed,
+                        "document_text": document_text,
+                        "name": parsed.get("name") or Path(filename).stem,
+                    }
+                )
+            continue
+
         try:
             raw_text = clean_text(extract_text_from_pdf(path))
         except ValueError as e:
@@ -157,17 +183,17 @@ async def upload_resumes(resume_files: list[UploadFile] = File(...)) -> dict[str
         try:
             parsed = parse_resume_with_groq(raw_text)
         except Exception as exc:
-            parse_errors.append(f"{upload.filename}: Groq parse failed — {exc}")
-            parsed = default_parsed_resume(upload.filename, raw_text)
+            parse_errors.append(f"{filename}: Groq parse failed — {exc}")
+            parsed = default_parsed_resume(filename, raw_text)
 
         document_text = build_resume_document(parsed) or raw_text
         resumes.append(
             {
-                "filename": upload.filename,
+                "filename": filename,
                 "saved_path": str(path),
                 "parsed": parsed,
                 "document_text": document_text,
-                "name": parsed.get("name") or Path(upload.filename).stem,
+                "name": parsed.get("name") or Path(filename).stem,
             }
         )
 

@@ -5,7 +5,7 @@ An MVP that ranks job candidates by **understanding resume meaning**, not just k
 ## Features
 
 - Upload job description (text or PDF)
-- Upload multiple resume PDFs
+- Upload multiple resume PDFs or JSON candidate profiles
 - Parse resumes into structured fields (name, skills, experience, education, projects, certifications)
 - Generate embeddings with `all-MiniLM-L6-v2` and store in FAISS
 - Semantic similarity ranking between job description and resumes
@@ -126,7 +126,7 @@ Note: Vercel serverless storage is temporary, so uploaded PDFs and CSV output ar
 ## Usage
 
 1. Paste or upload a **Job Description** (text or PDF).
-2. Upload one or more **Resume PDFs**.
+2. Upload one or more **Resume PDFs** or **JSON candidate profile files**.
 3. Click **Rank Candidates**.
 4. Review ranked results in the table.
 5. Click **Download CSV** to export results.
@@ -136,7 +136,7 @@ Note: Vercel serverless storage is temporary, so uploaded PDFs and CSV output ar
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `POST` | `/upload-job` | Upload job description (text and/or PDF) |
-| `POST` | `/upload-resumes` | Upload multiple resume PDFs |
+| `POST` | `/upload-resumes` | Upload multiple resume PDFs or JSON candidate profile files |
 | `POST` | `/rank` | Run semantic + Groq ranking |
 | `GET` | `/results` | Get latest ranking results |
 | `GET` | `/download-csv` | Download ranked candidates CSV |
@@ -154,7 +154,8 @@ curl -X POST "http://127.0.0.1:8000/upload-job" \
 ```bash
 curl -X POST "http://127.0.0.1:8000/upload-resumes" \
   -F "resume_files=@resume1.pdf" \
-  -F "resume_files=@resume2.pdf"
+  -F "resume_files=@resume2.pdf" \
+  -F "resume_files=@candidates.json"
 ```
 
 ### Example: Rank Candidates
